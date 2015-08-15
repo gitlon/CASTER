@@ -1,0 +1,61 @@
+>>> UPDATE v1.0.9
+- fixed bug for authentication with no existing role/credentials
+- added an option to not show notification popup
+- published to Github (https://github.com/gitlon/CASTER)
+
+>>> WHY
+AWS ADFS Federation (SAML) tokens have a maximum expiry of 1 hour.
+
+Until Amazon change this limit, you are forced to re-login every 1 hour to use ADFS credentials for the AWS console and/or APIs. This is annoying.
+
+This CASTER extension automates the re-login, as well as providing an indication of the time remaining until the current AWS credentials expire.
+
+>>> HOW
+- look at cookies from the AWS Console websites
+- parse out the current user, role and expiry time
+- when nearly expired, try to post to the specified ADFS URL to regenerate a SAML token
+- then post again, to the common AWS SAML login page, to select the current AWS role
+- if successful, the result is another credentialled-login for another 1 hour.
+
+This only works if your credentials are saved - ie that you can navigate to your ADFS page and not be prompted for username and password after the first login.
+
+>>> YOU (THE USER) MUST DO THIS
+You MUST enter *your own* organisation's ADFS url, including the AWS role-provider. Eg:
+
+- https://YOURADFS.com/adfs/ls/idpinitiatedsignon?loginToRp=urn:amazon:webservices/
+
+You should also review the default options.
+
+>>> OPTIONS
+- Attempt re-authentication as the current user/role?
+- Show a Chrome notification before credentials are nearly expired?
+- The URL for your organisation's ADFS endpoint
+- When (minutes before) to change the icon time text to yellow
+- When to change the icon time text to red
+- When to show the Chrome notification
+- When to attempt to re-authenticate
+
+>>> WHY THESE PERMISSIONS
+CASTER only needs permissions to two websites: your ADFS URL, and the standard AWS SAML role-choice page. Because you set your ADFS URL as an option, this can't be declared as a permission request. Therefore the extensions declares a request for "all websites". (This will be refined in a later version.)
+
+>>> OTHER DETAILS
+- What does CASTER mean?
+  Chrome AWS SAML Token Expiry Reminder.
+
+- I don't want you to steal my AWS or company passwords!?
+  CASTER doesn't store any passwords, or collect or send any private data. It gathers from readily-accessible cookies, and reposts using credentials saved by your browser - in the same way that a user would. You can easily review the extension code to confirm that this is the case.
+
+- Organization is spelled wrong in this text!?
+  Not in Australia.
+
+- This extension looks like it was written by some newbie that only just learned about Chrome Extensions and Javascript!!
+  Yes.
+
+- Feature XYZ could be done so much better!?
+  Please contribute: https://github.com/gitlon/CASTER
+
+- Is this an official, supported product?
+  CASTER is in no way related to, supported by or approved by Amazon, AWS or Amazon Web Services, or any other organisation. It was written by one individual for his own purposes, and is provided to the public without any warranty or guarantee that it is fit for any purpose.
+
+- How do we berate you?
+  Send questions, comments or whisky to: caster [dot] extension [at] gmail.com.

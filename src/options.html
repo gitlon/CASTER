@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CASTER Options</title>
+  <style type="text/css">
+         body {
+            width: 600px;
+            overflow: hidden;
+         }
+     </style>
+</head>
+
+<body>
+	<table id="optionsTable">
+			<tr><td>Attempt re-login?</td><td><input type="checkbox" id="val_dorelogin"></input></td></tr>
+      <tr><td>Show notifications?</td><td><input type="checkbox" id="val_dopopup"></input></td></tr>
+			<tr><td>ADFS URL</td><td><input type="text" id="val_loginurl" size="66" disabled></input></td></tr>
+			<tr><td>Before expiry (mins):</td></tr>
+			<tr><td>&nbsp;&nbsp;Warning yellow icon</td><td><input type="number" min="1" max="59" id="val_warntime"></input></td></tr>
+			<tr><td>&nbsp;&nbsp;Danger red icon</td><td><input type="number" min="1" max="59" id="val_dangerzone"></input></td></tr>
+			<tr><td>&nbsp;&nbsp;Notification popup</td><td><input type="number" min="1" max="59" id="val_alerttime"></input></td></tr>
+			<tr><td>&nbsp;&nbsp;Attempt re-login</td><td><input type="number" min="1" max="59" id="val_relogtime"></input></td></tr>
+	</table>
+  <div id="status" font-size="8px">options</div>
+  <button id="save">Save</button>
+  <button id="reset">Reset</button>
+  <button id="cancel">Cancel</button>
+
+  <script src="options.js"></script>
+</body>
+</html>
