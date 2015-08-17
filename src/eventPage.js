@@ -2,12 +2,12 @@
 var _expTime = new Date(0);
 var _msg = '';
 var _mins = -1;
-var _rtab;
+var _rtab = null;
 var _relogrole = '';
 var _rlistener;
 var _clistener;
 var _crescan;
-var _doDebug = false;
+var _doDebug = true;
 var _prevInfo = {};
 
 var _defaultprefs = {
@@ -144,38 +144,41 @@ function setUserPrefs() {
 
 function doReLogin() {
 	writeLog('doReLogin');
-	_rtab = null;
-	_relogrole = '';
-	var p = {
-		type: 'progress',
-		title: 'AWS Credential Expiry',
-		message: 'Attempting relogin\nfor: ' + _prevInfo.user + ' as ' + _prevInfo.role + '\nvia: ' + _prefs.loginurl,
-		isClickable: false,
-		priority: 0,
-		progress: 50,
-		iconUrl: 'working.png'
-	};
-	chrome.notifications.clear(NOTIFYNAME);
+	if (_rtab == null) {
 
-	if (!(_prefs.dorelogin)) {
-		writeLog('skipping relogin per user pref');
-		p.message = 'skipping relogin per user preferences';
-		p.progress = 0;
-	}
+		var p = {
+			type: 'progress',
+			title: 'AWS Credential Expiry',
+			message: 'Attempting relogin\nfor: ' + _prevInfo.user + ' as ' + _prevInfo.role + '\nvia: ' + _prefs.loginurl,
+			isClickable: false,
+			priority: 0,
+			progress: 50,
+			iconUrl: 'working.png'
+		};
+		chrome.notifications.clear(NOTIFYNAME);
 
-	if (_prefs.dopopup) {
-		chrome.notifications.create(NOTIFYNAME, p);
+		if (!(_prefs.dorelogin)) {
+			writeLog('skipping relogin per user pref');
+			p.message = 'skipping relogin per user preferences';
+			p.progress = 0;
+		}
+
+		if (_prefs.dopopup) {
+			chrome.notifications.create(NOTIFYNAME, p);
+		} else {
+			writeLog('skipping notification from doReLogin');
+		}
+
+		if (_prefs.dorelogin) {
+			writeLog('trying to create login tab');
+			_clistener = false;
+			_rlistener = true;
+			chrome.tabs.create({url: _prefs.loginurl, active: false}, function (t) {
+				_rtab = t;
+			});
+		}
 	} else {
-		writeLog('skipping notification from doReLogin');
-	}
-
-	if (_prefs.dorelogin) {
-		writeLog('trying to create login tab');
-		_clistener = false;
-		_rlistener = true;
-		chrome.tabs.create({url: _prefs.loginurl, active: false}, function (t) {
-			_rtab = t;
-		});
+		writeLog('reLogin already in progress');
 	}
 }
 
@@ -201,8 +204,9 @@ function doPostBack(tabid, change, tab) {
 			else if (change.status == 'complete') {
 				if (_relogrole) {
 					writeLog('doPostBack done');
-					evalAllCookies();
 					_rlistener = false;
+					_rtab = null;
+					evalAllCookies();
 					try {
 						chrome.tabs.remove(tabid);
 					} catch (err) {

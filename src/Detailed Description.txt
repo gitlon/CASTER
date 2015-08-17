@@ -1,3 +1,6 @@
+>>> UPDATE v1.0.10
+- fixed a stupid bug from previous update which broke re-auth. Sorry.
+
 >>> UPDATE v1.0.9
 - fixed bug for authentication with no existing role/credentials
 - added an option to not show notification popup
