@@ -186,7 +186,7 @@ function doPostBack(tabid, change, tab) {
 	writeLog(tabid, change, tab);
 	if (_rlistener) {
 		if (_rtab.id == tabid) {
-			if (change.status == 'complete' && tab.url == 'https://signin.aws.amazon.com/saml' && (!(_relogrole))) {
+			if (change.status == 'complete' && (tab.url == 'https://signin.aws.amazon.com/saml' || tab.url.indexOf('console.aws.amazon.com') > 0) && (!(_relogrole))) {
 				writeLog('doPostBack ready');
 				if (!_prevInfo.userInfo) {
 					writeLog('need to invoke evalAllCookies later');
