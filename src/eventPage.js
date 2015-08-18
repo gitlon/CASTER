@@ -35,11 +35,11 @@ chrome.runtime.onInstalled.addListener(function(details){
 	writeLog("Installed");
   if(details.reason == "install") {
   	writeLog("This is a first install!");
+	chrome.runtime.openOptionsPage();
   } else if (details.reason == "update") {
   	var thisVersion = chrome.runtime.getManifest().version;
     writeLog("Updated from " + details.previousVersion + " to " + thisVersion + "!");
   }
-	chrome.runtime.openOptionsPage();
 });
 
 chrome.cookies.onChanged.addListener(cookieListener);
