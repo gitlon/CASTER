@@ -191,11 +191,27 @@ function doPostBack(tabid, change, tab) {
 				if (!_prevInfo.userInfo) {
 					writeLog('need to invoke evalAllCookies later');
 				} else {
-					_relogrole = _prevInfo.userInfo.arn.replace(':sts:', ':iam:').replace(':assumed-role/', ':role/');
-					_relogrole = _relogrole.substring(0, _relogrole.lastIndexOf('/'));
+					_relogaccountid = _prevInfo.userInfo.arn.split(":")[4]
+					_relogrole = _prevInfo.userInfo.arn.split(":")[5].split("/")[1]
+					writeLog('_relogaccountid', _relogaccountid);
 					writeLog('_relogrole', _relogrole);
 					chrome.tabs.executeScript(tabid,
-						{code: 'document.getElementById("' + _relogrole + '").checked = true; document.getElementById("saml_form").submit();'}, function (n) {
+						{
+							code: 'var input = document.getElementsByTagName("input");' +
+										'for (i = 0; i < input.length; i++) {' +
+										'  var el = input[i];' +
+										'  console.log(el.id);' +
+										'  if (' +
+										'      el.type == "radio" &&' +
+										'      el.id.indexOf("' + _relogaccountid + '") > -1 &&' +
+										'      el.id.indexOf("' + _relogrole + '") > -1' +
+										'    ) {' +
+										'    el.checked = true;' +
+										'    document.getElementById("saml_form").submit();' +
+										'    break;' +
+										'  }' +
+										'}'
+						}, function (n) {
 							writeLog('posted');
 						}
 					);
