@@ -21,7 +21,7 @@
 	},
 	"background" : {
 		"persistent" : false,
-		"scripts" : ["eventpage.js"]
+		"scripts" : ["eventPage.js"]
 	},
 	"omnibox" : {
 		"keyword" : "caster"
